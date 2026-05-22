@@ -1,0 +1,74 @@
+# Description: Local development stack — TimescaleDB (Postgres 16) + Redis 7.
+#              Run from the repo root: docker compose -f infra/docker-compose.yml up -d
+#              Or from this directory:  docker compose up -d
+#
+#              Credentials and ports default to the values in .env.example.
+#              Copy infra/.env.example → infra/.env and override as needed.
+#
+# Last Modified By: bvela
+# Created: 2026-05-22
+# Last Modified:
+#     2026-05-22 - File created; added db (TimescaleDB) and redis services.
+
+services:
+  # ── Postgres 16 + TimescaleDB ─────────────────────────────────────────────
+  db:
+    image: timescale/timescaledb:latest-pg16
+    container_name: stockie_db
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: ${POSTGRES_USER:-stockie}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-stockie}
+      POSTGRES_DB: ${POSTGRES_DB:-stockie_ai}
+    ports:
+      - "${POSTGRES_PORT:-5432}:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+      # Init scripts run once on first data-directory initialisation.
+      - ./postgres/init:/docker-entrypoint-initdb.d:ro
+    healthcheck:
+      test:
+        [
+          "CMD-SHELL",
+          "pg_isready -U ${POSTGRES_USER:-stockie} -d ${POSTGRES_DB:-stockie_ai}",
+        ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 30s
+    networks:
+      - stockie_net
+
+  # ── Redis 7 ───────────────────────────────────────────────────────────────
+  redis:
+    image: redis:7-alpine
+    container_name: stockie_redis
+    restart: unless-stopped
+    # appendonly yes → durability; requirepass is empty by default (dev only).
+    command: >
+      redis-server
+      --appendonly yes
+      --requirepass "${REDIS_PASSWORD:-}"
+    ports:
+      - "${REDIS_PORT:-6379}:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "-a", "${REDIS_PASSWORD:-}", "ping"]
+      interval: 10s
+      timeout: 5s
+      retries: 5
+    networks:
+      - stockie_net
+
+# ── Named volumes (persist across container restarts) ────────────────────────
+volumes:
+  postgres_data:
+    name: stockie_postgres_data
+  redis_data:
+    name: stockie_redis_data
+
+# ── Shared bridge network ────────────────────────────────────────────────────
+networks:
+  stockie_net:
+    name: stockie_net

@@ -25,3 +25,7 @@ htmlcov/
 
 # mypy
 .mypy_cache/
+
+# Docker / infra
+infra/.env
+!infra/.env.example
