@@ -88,8 +88,8 @@ Companion to [`PLANNING_features.md`](./PLANNING_features.md). This is the worki
 
 **Goal:** Both of us can run the full stack locally and push to a shared repo. No business logic yet.
 
-- [ ] `@bvela` Create GitHub repo, add `CLAUDE.md`, `PLANNING_features.md`, `PLANNING_tasks.md`, `.gitignore`, `LICENSE`.
-- [ ] `@bvela` Initialize FastAPI project with Poetry/uv, Pydantic Settings, `/health` endpoint, structured logging.
+- [x] `@bvela` Create GitHub repo, add `CLAUDE.md`, `PLANNING_features.md`, `PLANNING_tasks.md`, `.gitignore`, `LICENSE`.
+- [x] `@bvela` Initialize FastAPI project with Poetry/uv, Pydantic Settings, `/health` endpoint, structured logging.
 - [ ] `@bvela` Add `docker-compose.yml` with Postgres + TimescaleDB extension + Redis.
 - [ ] `@bvela` Configure Alembic migrations; create an empty initial migration.
 - [ ] `@bvela` Set up pre-commit (ruff + black + mypy) and pytest skeleton.
