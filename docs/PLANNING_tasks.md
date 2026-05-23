@@ -92,8 +92,8 @@ Companion to [`PLANNING_features.md`](./PLANNING_features.md). This is the worki
 - [x] `@bvela` Initialize FastAPI project with Poetry/uv, Pydantic Settings, `/health` endpoint, structured logging.
 - [x] `@bvela` Add `docker-compose.yml` with Postgres + TimescaleDB extension + Redis.
 - [x] `@bvela` Configure Alembic migrations; create an empty initial migration.
-- [ ] `@bvela` Set up pre-commit (ruff + black + mypy) and pytest skeleton.
-- [ ] `@despinoza` Initialize Next.js 14 + TypeScript + Tailwind project.
+- [x] `@bvela` Set up pre-commit (ruff + black + mypy) and pytest skeleton.
+- [x] `@despinoza` Initialize Next.js 14 + TypeScript + Tailwind project.
 - [ ] `@despinoza` Set up ESLint + Prettier + a basic component library (shadcn/ui or similar).
 - [ ] `@despinoza` Wire a typed API client (e.g. `openapi-typescript`) consuming FastAPI's `/openapi.json`.
 - [ ] `@despinoza` Build placeholder landing page that calls `/health` and renders the response.
