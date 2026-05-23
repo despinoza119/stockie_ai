@@ -7,6 +7,7 @@ Last Modified By: bvela
 Created: 2026-05-22
 Last Modified:
     2026-05-22 - File created; added AppSettings with app, server, and logging groups.
+    2026-05-22 - Added database_url and redis_url fields for Alembic / async SQLAlchemy.
 """
 
 from functools import lru_cache
@@ -46,6 +47,19 @@ class AppSettings(BaseSettings):
     log_level: Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"] = Field(
         default="INFO",
         description="Minimum log level emitted by the application.",
+    )
+
+    # ── Database ─────────────────────────────────────────────────────────────
+    # Optional so tests that don't need a DB can run without a live connection.
+    database_url: str | None = Field(
+        default=None,
+        description="Async SQLAlchemy URL (postgresql+asyncpg://...). Required at runtime.",
+    )
+
+    # ── Redis ─────────────────────────────────────────────────────────────────
+    redis_url: str | None = Field(
+        default=None,
+        description="Redis connection URL (redis://...). Required when Celery is active.",
     )
 
     @property
