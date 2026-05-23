@@ -8,8 +8,8 @@ Last Modified:
     2026-05-22 - File created; registered /health router and structured logging setup.
 """
 
+from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
-from typing import AsyncIterator
 
 import structlog
 from fastapi import FastAPI

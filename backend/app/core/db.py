@@ -8,12 +8,14 @@ Last Modified By: bvela
 Created: 2026-05-22
 Last Modified:
     2026-05-22 - File created; async engine, session factory, and get_db dependency.
+    2026-05-23 - Added AsyncEngine return type to _build_engine for mypy compliance.
 """
 
 from collections.abc import AsyncIterator
 
 import structlog
 from sqlalchemy.ext.asyncio import (
+    AsyncEngine,
     AsyncSession,
     async_sessionmaker,
     create_async_engine,
@@ -24,7 +26,7 @@ from app.core.config import get_settings
 _log = structlog.get_logger(__name__)
 
 
-def _build_engine():
+def _build_engine() -> AsyncEngine:
     """Create the async SQLAlchemy engine from current settings.
 
     Returns:

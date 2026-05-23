@@ -13,15 +13,15 @@ Last Modified:
 import asyncio
 from logging.config import fileConfig
 
-from alembic import context
 from sqlalchemy.ext.asyncio import create_async_engine
 
+import app.models  # noqa: F401  — registers concrete models on Base.metadata
+from alembic import context
 from app.core.config import get_settings
 
 # Import Base and all model modules so autogenerate sees the full schema.
 # Add new model imports here as they are created in later sprints.
 from app.models.base import Base  # noqa: F401
-import app.models  # noqa: F401  — registers concrete models on Base.metadata
 
 config = context.config
 
@@ -40,6 +40,7 @@ def _get_url() -> str:
 
 # ── Offline mode — emits SQL script, no live connection needed ────────────────
 
+
 def run_migrations_offline() -> None:
     """Emit migration SQL to stdout without a live DB connection."""
     context.configure(
@@ -54,6 +55,7 @@ def run_migrations_offline() -> None:
 
 
 # ── Online mode — runs against a live async DB connection ─────────────────────
+
 
 def _do_run_migrations(connection) -> None:
     context.configure(

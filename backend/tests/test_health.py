@@ -5,18 +5,10 @@ Last Modified By: bvela
 Created: 2026-05-22
 Last Modified:
     2026-05-22 - File created; added happy-path and field-shape tests.
+    2026-05-23 - Removed local client fixture; now provided by tests/conftest.py.
 """
 
-import pytest
 from fastapi.testclient import TestClient
-
-from app.main import app
-
-
-@pytest.fixture(scope="module")
-def client() -> TestClient:
-    """Provide a synchronous TestClient for the FastAPI app."""
-    return TestClient(app)
 
 
 def test_health_returns_200(client: TestClient) -> None:

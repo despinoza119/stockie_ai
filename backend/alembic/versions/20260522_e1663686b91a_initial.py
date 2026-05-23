@@ -8,12 +8,8 @@ Last Modified:
 
 from collections.abc import Sequence
 
-from alembic import op
-import sqlalchemy as sa
-
-
 # revision identifiers
-revision: str = 'e1663686b91a'
+revision: str = "e1663686b91a"
 down_revision: str | Sequence[str] | None = None
 branch_labels: str | Sequence[str] | None = None
 depends_on: str | Sequence[str] | None = None
