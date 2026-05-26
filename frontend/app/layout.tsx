@@ -6,15 +6,13 @@
  * Created: 2026-05-23
  * Last Modified:
  *     2026-05-23 - Replaced create-next-app boilerplate with project metadata.
+ *     2026-05-25 - Removed duplicate next/font/google Geist import added by shadcn init
+ *                  (Next.js 14.2.x types do not include Geist in google; local font files used instead).
  */
 
 import type { Metadata } from "next";
 import localFont from "next/font/local";
 import "./globals.css";
-import { Geist } from "next/font/google";
-import { cn } from "@/lib/utils";
-
-const geist = Geist({ subsets: ["latin"], variable: "--font-sans" });
 
 const geistSans = localFont({
   src: "./fonts/GeistVF.woff",
@@ -42,7 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" className={cn("font-sans", geist.variable)}>
+    <html lang="en">
       <body className={`${geistSans.variable} ${geistMono.variable} antialiased`}>{children}</body>
     </html>
   );
