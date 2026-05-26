@@ -8,7 +8,8 @@
     "start": "next start",
     "lint": "next lint",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "generate": "openapi-typescript http://localhost:8000/openapi.json -o lib/api/schema.d.ts"
   },
   "dependencies": {
     "@base-ui/react": "^1.5.0",
@@ -16,6 +17,7 @@
     "clsx": "^2.1.1",
     "lucide-react": "^1.16.0",
     "next": "14.2.35",
+    "openapi-fetch": "^0.17.0",
     "react": "^18",
     "react-dom": "^18",
     "shadcn": "^4.8.0",
@@ -30,6 +32,7 @@
     "eslint-config-next": "14.2.35",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.5",
+    "openapi-typescript": "^7.13.0",
     "postcss": "^8",
     "prettier": "^3.8.3",
     "tailwindcss": "^3.4.1",

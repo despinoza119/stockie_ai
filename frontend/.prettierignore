@@ -2,3 +2,5 @@
 node_modules/
 public/
 *.min.js
+# auto-generated — do not format manually
+lib/api/schema.d.ts
