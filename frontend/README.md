@@ -1,36 +1,132 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Stockie AI — Frontend
 
-## Getting Started
+Next.js 14 app for the Stockie AI dashboard — charts, analysis views, and recommendations UI.
 
-First, run the development server:
+> See the root [`README.md`](../README.md) for full-stack quick-start instructions.
+
+---
+
+## Stack
+
+- **Next.js 14** (App Router) + **TypeScript**
+- **Tailwind CSS** v3 — utility-first styling
+- **shadcn/ui** — accessible component library (base-ui primitives + CVA)
+- **openapi-fetch** — typed HTTP client generated from the FastAPI OpenAPI spec
+- **ESLint** + **Prettier** — lint and formatting
+
+---
+
+## Setup
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# From the frontend/ directory
+npm install
+
+# Copy env file (backend URL)
+cp .env.example .env.local
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Running the dev server
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+```bash
+npm run dev   # →  http://localhost:3000
+```
 
-## Learn More
+The backend must be running for the landing page health card to show live data.
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## Environment variables
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+| Variable | Default | Description |
+|----------|---------|-------------|
+| `NEXT_PUBLIC_API_URL` | `http://localhost:8000` | Base URL of the FastAPI backend |
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Available scripts
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+| Script | What it does |
+|--------|-------------|
+| `npm run dev` | Start dev server with hot reload |
+| `npm run build` | Production build |
+| `npm run start` | Serve the production build |
+| `npm run lint` | ESLint across all files |
+| `npm run format` | Prettier — auto-fix all files |
+| `npm run format:check` | Prettier — check without writing |
+| `npm run generate` | Regenerate TypeScript types from `GET /openapi.json` |
+
+---
+
+## Typed API client
+
+The API client lives in `lib/api/` and is generated from the live backend spec.
+
+```bash
+# Regenerate after the backend adds or changes endpoints (backend must be running)
+npm run generate
+```
+
+Usage anywhere in the app:
+
+```ts
+import { apiClient } from "@/lib/api";
+
+const { data, error } = await apiClient.GET("/health");
+// data is fully typed as { status: string; version: string; ... }
+```
+
+`lib/api/schema.d.ts` is auto-generated — never edit it by hand.
+
+---
+
+## Adding shadcn/ui components
+
+```bash
+# Example: add a Card component
+npx shadcn@latest add card
+```
+
+Components are installed into `components/ui/`. Add the file header (per `CLAUDE.md`) after installation.
+
+---
+
+## Linting and type-checking
+
+```bash
+npm run lint           # ESLint
+npm run format:check   # Prettier
+npx tsc --noEmit       # TypeScript
+```
+
+All three must pass before opening a PR — CI enforces this automatically.
+
+---
+
+## Project layout
+
+```
+frontend/
+├── app/
+│   ├── globals.css          # Tailwind + shadcn CSS custom properties
+│   ├── layout.tsx           # Root layout — fonts, metadata
+│   └── page.tsx             # Sprint 0 landing page (calls /health)
+├── components/
+│   ├── health-status.tsx    # Async server component — backend status card
+│   └── ui/
+│       └── button.tsx       # shadcn/ui Button (CVA variants)
+├── lib/
+│   ├── api/
+│   │   ├── schema.d.ts      # AUTO-GENERATED — do not edit
+│   │   ├── client.ts        # apiClient singleton
+│   │   └── index.ts         # Public barrel export
+│   └── utils.ts             # cn() Tailwind merge helper
+├── types/
+│   └── css.d.ts             # Ambient CSS module declaration
+├── .env.example
+├── .eslintrc.json
+├── .prettierrc
+└── tailwind.config.ts
+```
