@@ -54,8 +54,17 @@ Companion to [`PLANNING_features.md`](./PLANNING_features.md). This is the worki
     PLANNING_tasks.md   # this file
     CLAUDE.md
   ```
-- **Branches:** `main` (always deployable), `feat/<short-desc>`, `fix/<short-desc>`. PRs reviewed by the other person. No direct pushes to `main`.
+- **Branches:**
+  - `main` — always deployable; no direct pushes.
+  - `feat/<short-desc>` — new features (e.g. `feat/ticker-search`).
+  - `fix/<short-desc>` — bug fixes (e.g. `fix/health-timestamp-tz`).
+  - `chore/<short-desc>` — tooling, deps, config (e.g. `chore/upgrade-ruff`).
+  - `docs/<short-desc>` — documentation-only changes.
+  - Keep names lowercase, hyphen-separated, ≤ 40 characters.
+  - Open a PR against `main`; the other person reviews before merge.
 - **Commits:** Conventional Commits (`feat:`, `fix:`, `chore:`, `refactor:`, `test:`, `docs:`).
+- **Issues:** Use the GitHub issue templates (bug report / feature request). Link issues to PRs with `Closes #<n>`.
+- **PRs:** Use the PR template. CI must be green before merge. Squash-merge preferred to keep `main` history clean.
 - **Definition of Done** (every task):
   1. Code merged to `main` via reviewed PR.
   2. Passing tests where applicable (unit for backend logic, component/e2e for frontend flows).
@@ -98,8 +107,8 @@ Companion to [`PLANNING_features.md`](./PLANNING_features.md). This is the worki
 - [x] `@despinoza` Wire a typed API client (e.g. `openapi-typescript`) consuming FastAPI's `/openapi.json`.
 - [x] `@despinoza` Build placeholder landing page that calls `/health` and renders the response.
 - [x] `@both` GitHub Actions CI: lint + tests on every PR, both backend and frontend.
-- [ ] `@both` Decide on issue/PR template and branch naming. Document under §2.
-- [ ] `@both` Pair session: end-to-end smoke (`docker compose up` → both services reachable, frontend reads from backend).
+- [x] `@both` Decide on issue/PR template and branch naming. Document under §2.
+- [x] `@both` Pair session: end-to-end smoke (`docker compose up` → both services reachable, frontend reads from backend).
 
 **Retro (fill at end of sprint):**
 
