@@ -1,0 +1,106 @@
+## Description: GitHub Actions CI pipeline for Stockie AI.
+##              Runs on every pull_request targeting main and on direct pushes to main.
+##              Two parallel jobs:
+##                - backend: ruff + black + mypy lint, then pytest against a live Postgres
+##                - frontend: ESLint, Prettier check, and tsc type-check
+##              Last Modified By: bvela
+##              Created: 2026-05-26
+##              Last Modified:
+##                  2026-05-26 - File created; Sprint 0 CI skeleton.
+
+name: CI
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+
+jobs:
+  # ── Backend ──────────────────────────────────────────────────────────────────
+  backend:
+    name: Backend — lint + test
+    runs-on: ubuntu-latest
+
+    services:
+      postgres:
+        image: timescale/timescaledb:latest-pg16
+        env:
+          POSTGRES_USER: stockie
+          POSTGRES_PASSWORD: stockie
+          POSTGRES_DB: stockie_ai
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd "pg_isready -U stockie"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+    defaults:
+      run:
+        working-directory: backend
+
+    env:
+      APP_ENV: development
+      APP_VERSION: 0.1.0
+      APP_DEBUG: "false"
+      DATABASE_URL: postgresql+asyncpg://stockie:stockie@localhost:5432/stockie_ai
+      REDIS_URL: redis://localhost:6379/0
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v4
+        with:
+          version: "latest"
+
+      - name: Set up Python 3.12
+        run: uv python install 3.12
+
+      - name: Install dependencies
+        run: uv sync --extra dev
+
+      - name: Lint — ruff
+        run: uv run ruff check .
+
+      - name: Lint — black
+        run: uv run black --check .
+
+      - name: Lint — mypy
+        run: uv run mypy app/
+
+      - name: Test — pytest
+        run: uv run pytest -v
+
+  # ── Frontend ─────────────────────────────────────────────────────────────────
+  frontend:
+    name: Frontend — lint + typecheck
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: frontend
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: "20"
+          cache: "npm"
+          cache-dependency-path: frontend/package-lock.json
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint — ESLint
+        run: npm run lint
+
+      - name: Lint — Prettier
+        run: npm run format:check
+
+      - name: Typecheck — tsc
+        run: npx tsc --noEmit
